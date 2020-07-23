@@ -42,11 +42,11 @@ type consignmentService struct {
 // CreateConsignment - we created just one method on our service,
 // which is a create method, which takes a context and a request as an
 // argument, these are handled by the gRPC server
-func (s *consignmentService) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) (*pb.Response, error) {
+func (s *consignmentService) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
 	//Save consignment
 	consignment, err := s.repo.Create(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// Return matching the `Response` message we created in our
@@ -56,9 +56,9 @@ func (s *consignmentService) CreateConsignment(ctx context.Context, req *pb.Cons
 	return nil
 }
 
-func (s *consignmentService) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) (*pb.Response, error) {
+func (s *consignmentService) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
 	consignments := s.repo.GetAll()
-	res.Consignment = consignments
+	res.Consignments = consignments
 	return nil
 }
 
@@ -68,16 +68,16 @@ func main() {
 	//Create a new service. Optionally include some options
 	service := micro.NewService(
 		//This name must match the package name given in the protobuf definition
-		micro.Name("shippy.service.consignment")
+		micro.Name("shippy.service.consignment"),
 	)
 	service.Init()
 
 	// Register our service
-	if err := pb.RegisterShippingServiceHandler(service.Server(), &consignmentService{repo}); err != nil{
+	if err := pb.RegisterShippingServiceHandler(service.Server(), &consignmentService{repo}); err != nil {
 		log.Panic(err)
 	}
 	//Run the server
-	if err := service.Run(); err != nil{
+	if err := service.Run(); err != nil {
 		log.Panic(err)
 	}
 }
