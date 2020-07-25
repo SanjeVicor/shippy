@@ -2,9 +2,8 @@ package main
 
 import (
 	"context"
-	"errors"
-	"os"
 	"log"
+	"os"
 
 	pb "github.com/SanjeVicor/shippy/shippy-service-vessel/proto/vessel"
 	"github.com/micro/go-micro/v2"
@@ -12,12 +11,15 @@ import (
 
 func main() {
 	service := micro.NewService(
-		micro.Name("shippy.service.vessel")
+		micro.Name("shippy.service.vessel"),
 	)
+
 	service.Init()
+
 	uri := os.Getenv("DB_HOST")
+
 	client, err := CreateClient(context.Background(), uri, 0)
-	if err != nil{
+	if err != nil {
 		log.Panic(err)
 	}
 	defer client.Disconnect(context.Background())
@@ -28,11 +30,11 @@ func main() {
 	h := &handler{repository}
 
 	// Register our implementation with
-	if err := pb.RegisterVesselServiceHandler(service.Server(), h); err != nil{
+	if err := pb.RegisterVesselServiceHandler(service.Server(), h); err != nil {
 		log.Panic(err)
 	}
 
-	if err := service.Run(); err != nil{
+	if err := service.Run(); err != nil {
 		log.Panic(err)
 	}
 }
