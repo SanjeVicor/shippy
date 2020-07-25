@@ -33,9 +33,10 @@ func MarshalContainerCollection(containers []*pb.Container) []*Container {
 
 func UnmarshalContainerCollection(containers []*Container) []*pb.Container {
 	collection := make([]*pb.Container, 0)
-	for _, consignment := range containers {
-		collection = append(collection, UnmarshalConsignment(consignment))
+	for _, container := range containers {
+		collection = append(collection, UnmarshalContainer(container))
 	}
+	return collection
 }
 
 func UnmarshalConsignmentCollection(consignments []*Consignment) []*pb.Consignment {
@@ -62,7 +63,7 @@ func MarshalContainer(container *pb.Container) *Container {
 	}
 }
 
-// Marshal an input consignmet type to a consignment model
+// Marshal an input consignment type to a consignment model
 func MarshalConsignment(consignment *pb.Consignment) *Consignment {
 	containers := MarshalContainerCollection(consignment.Containers)
 	return &Consignment{
@@ -70,7 +71,7 @@ func MarshalConsignment(consignment *pb.Consignment) *Consignment {
 		Weight:      consignment.Weight,
 		Description: consignment.Description,
 		Containers:  containers,
-		VesselId:    consignment.VesselId,
+		VesselID:    consignment.VesselId,
 	}
 }
 
@@ -79,7 +80,7 @@ func UnmarshalConsignment(consignment *Consignment) *pb.Consignment {
 		Id:          consignment.ID,
 		Weight:      consignment.Weight,
 		Description: consignment.Description,
-		Containers:  UnmarshalConsignmentCollection(consignment.Containers),
+		Containers:  UnmarshalContainerCollection(consignment.Containers),
 		VesselId:    consignment.VesselID,
 	}
 }
@@ -89,13 +90,13 @@ type repository interface {
 	GetAll(ctx context.Context) ([]*Consignment, error)
 }
 
-//MongoRepository implementation
+// MongoRepository implementation
 type MongoRepository struct {
 	collection *mongo.Collection
 }
 
 // Create -
-func (repository *MongoRepository) Create(ctx context.Context, Consignment *Consignment) error {
+func (repository *MongoRepository) Create(ctx context.Context, consignment *Consignment) error {
 	_, err := repository.collection.InsertOne(ctx, consignment)
 	return err
 }
