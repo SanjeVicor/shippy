@@ -1,7 +1,9 @@
 module github.com/SanjeVicor/shippy/shippy-service-vessel
 
 go 1.14
+
 replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
+
 require (
 	github.com/coreos/etcd v3.3.22+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
@@ -14,6 +16,7 @@ require (
 	github.com/nats-io/jwt v1.0.1 // indirect
 	github.com/nats-io/nats.go v1.10.0 // indirect
 	github.com/nats-io/nkeys v0.2.0 // indirect
+	go.mongodb.org/mongo-driver v1.3.5
 	go.uber.org/zap v1.15.0 // indirect
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899 // indirect
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
